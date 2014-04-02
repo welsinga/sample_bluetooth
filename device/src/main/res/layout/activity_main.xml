@@ -15,19 +15,20 @@
         android:gravity="center"
         android:text="@string/txt_info" />
 
-    <ScrollView
+    <Button
+        android:id="@+id/btn_listener"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:scrollbarStyle="outsideInset"
-        android:layout_below="@id/txt_info">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/btn_listener_start" />
 
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitStart"
-            android:src="@drawable/glasswithbeard" />
-    </ScrollView>
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/txt_info"
+        android:layout_above="@id/btn_listener"
+        android:src="@drawable/glasswithbeard" />
 
 </RelativeLayout>

@@ -6,7 +6,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +24,10 @@ public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "SampleBluetooth";
 
-    private TextView _tvInfo;
-    private ImageView _imgView;
+    private TextView mTvInfo;
+    private ImageView mImgView;
+    private Button mBtnListener;
+    private boolean mListening = false;
 
     private static final byte STRING_DATA = 43;
 
@@ -36,14 +40,38 @@ public class MainActivity extends FragmentActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        _tvInfo = (TextView) findViewById(R.id.txt_info);
-        _imgView = (ImageView) findViewById(R.id.image_view);
+        mTvInfo = (TextView) findViewById(R.id.txt_info);
+        mImgView = (ImageView) findViewById(R.id.image_view);
+        mBtnListener = (Button) findViewById(R.id.btn_listener);
+        mBtnListener.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mListening) {
+                    startBT();
+                } else {
+                    stopBT();
+                }
+            }
+        });
+    }
+
+    private void stopBT() {
+        stopBluetoothListener();
+        mBtnListener.setText(R.string.btn_listener_start);
+        mTvInfo.setText(R.string.txt_info);
+        mImgView.setImageResource(R.drawable.glasswithbeard);
+        mListening = false;
+    }
+
+    private void startBT() {
+        startBluetoothListener();
+        mBtnListener.setText(R.string.btn_listener_stop);
+        mListening = true;
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -59,19 +87,16 @@ public class MainActivity extends FragmentActivity {
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onStop() {
+        stopBluetoothListener();
 
-        startBluetoothListener();
+        super.onStop();
     }
 
-    @Override
-    protected void onStop() {
+    private void stopBluetoothListener() {
         if (_listenerConnection != null) {
             _listenerConnection.stopConnection();
         }
-
-        super.onStop();
     }
 
     private void startBluetoothListener() {
@@ -85,6 +110,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onConnectionFailed() {
                 Log.i(TAG, "Server#onConnectionFailed");
+                stopBT();
             }
 
             @Override
@@ -100,15 +126,15 @@ public class MainActivity extends FragmentActivity {
                     case STRING_DATA:
                         try {
                             String stringSent = new String(Base64.decode(command.option, Base64.DEFAULT), "UTF-8");
-                            _tvInfo.setText(stringSent);
-                            _imgView.setImageDrawable(null);
-                            _imgView.setBackgroundResource(0);
+                            mTvInfo.setText(stringSent);
+                            mImgView.setImageDrawable(null);
+                            mImgView.setBackgroundResource(0);
                         } catch (UnsupportedEncodingException e) {
                             Log.e(TAG, "Not able to update information", e);
                         }
                         break;
                     default:
-                        _tvInfo.setText("Received data of type: " + command.type);
+                        mTvInfo.setText("Received data of type: " + command.type);
 
                         break;
                 }
@@ -116,5 +142,4 @@ public class MainActivity extends FragmentActivity {
         }, true);
         _listenerConnection.startConnection();
     }
-
 }
