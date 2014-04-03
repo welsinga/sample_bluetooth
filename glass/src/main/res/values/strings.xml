@@ -3,5 +3,8 @@
 
     <string name="app_name">SampleBluetooth</string>
     <string name="glass_voice_trigger">Show sample</string>
+    <string name="instruction_long_press">Long press to select pairing device</string>
+    <string name="instruction_paired_failed">Pairing failed or lost. Long press again</string>
+    <string name="instruction_tap">Tap so send text to device</string>
 
 </resources>
