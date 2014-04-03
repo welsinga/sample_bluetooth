@@ -1,5 +1,7 @@
 package com.elsinga.sample.bluetooth.device;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
@@ -28,6 +30,8 @@ public class MainActivity extends FragmentActivity {
     private ImageView mImgView;
     private Button mBtnListener;
     private boolean mListening = false;
+
+    private static final String FLIP = "Flip";
 
     private static final byte STRING_DATA = 43;
 
@@ -126,9 +130,14 @@ public class MainActivity extends FragmentActivity {
                     case STRING_DATA:
                         try {
                             String stringSent = new String(Base64.decode(command.option, Base64.DEFAULT), "UTF-8");
-                            mTvInfo.setText(stringSent);
-                            mImgView.setImageDrawable(null);
-                            mImgView.setBackgroundResource(0);
+                            if (FLIP.equals(stringSent)) {
+                                ObjectAnimator anim = (ObjectAnimator) AnimatorInflater.loadAnimator(MainActivity.this, R.anim.flip);
+                                anim.setTarget(mImgView);
+                                anim.setDuration(3000);
+                                anim.start();
+                            } else {
+                                mTvInfo.setText(stringSent);
+                            }
                         } catch (UnsupportedEncodingException e) {
                             Log.e(TAG, "Not able to update information", e);
                         }

@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import ktlab.lib.connection.ConnectionCallback;
 import ktlab.lib.connection.ConnectionCommand;
@@ -29,14 +27,16 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     private static final byte STRING_DATA = 43;
     private static final int STRING_DATA_COMMAND_ID = 11;
 
+    private static final String FLIP = "Flip";
+
     private GestureDetector _gestureDetector;
 
     private ClientBluetoothConnection _senderConnection;
 
     private BluetoothDevice _device;
 
-    private TextView _tvStatus;
-    private ImageView _ivExplanation;
+    private TextView mTVStatus;
+    private ImageView mIVExplanation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        _tvStatus = (TextView) findViewById(R.id.status);
-        _ivExplanation = (ImageView) findViewById(R.id.explanation);
+        mTVStatus = (TextView) findViewById(R.id.status);
+        mIVExplanation = (ImageView) findViewById(R.id.explanation);
 
         _gestureDetector = new GestureDetector(this, this);
     }
@@ -95,16 +95,15 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
                 public void onConnectComplete() {
                     Log.i(TAG, "Client#onConnectComplete");
                     sendTextData("Connected with Glass");
-                    _ivExplanation.setImageResource(R.drawable.pair_successful);
-                    _tvStatus.setText(R.string.instruction_tap);
-
+                    mIVExplanation.setImageResource(R.drawable.pair_successful);
+                    mTVStatus.setText(R.string.instruction_tap);
                 }
 
                 @Override
                 public void onConnectionFailed() {
                     Log.i(TAG, "Client#onConnectionFailed");
-                    _ivExplanation.setImageResource(R.drawable.pair_failed);
-                    _tvStatus.setText(R.string.instruction_paired_failed);
+                    mIVExplanation.setImageResource(R.drawable.pair_failed);
+                    mTVStatus.setText(R.string.instruction_paired_failed);
                 }
 
                 @Override
@@ -145,11 +144,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
         if (_device != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(System.currentTimeMillis());
-            sendTextData("Yes " + sdf.format(cal.getTime()));
+            sendTextData(FLIP);
         }
         return true;
     }
