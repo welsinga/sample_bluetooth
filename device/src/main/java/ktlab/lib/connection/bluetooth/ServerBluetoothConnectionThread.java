@@ -1,11 +1,11 @@
 package ktlab.lib.connection.bluetooth;
 
-import java.io.IOException;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.os.Message;
 import android.util.Log;
+
+import java.io.IOException;
 
 public class ServerBluetoothConnectionThread extends BluetoothConnectionThread {
 
@@ -28,7 +28,7 @@ public class ServerBluetoothConnectionThread extends BluetoothConnectionThread {
             mServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SERVICE_NAME,
                     BluetoothConnection.SERVICE_UUID);
         } catch (IOException e) {
-            Log.e(TAG, "failed to get server socekt", e);
+            Log.e(TAG, "failed to get server socket", e);
             return;
         }
 
